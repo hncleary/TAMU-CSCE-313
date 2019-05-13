@@ -1,0 +1,47 @@
+echo Here starts our shell...
+echo -e "<<<<< This message contains a line feed >>>>>\n"
+echo "<<<<< Start to exercise pipe >>>>>"
+
+echo "<<<<< IO redirection >>>>>"
+ps > test.txt
+grep pts < test.txt
+pwd > pwd.txt
+mv pwd.txt newpwd.txt
+cat newpwd.txt
+
+
+echo "<<<<< 1 pipe >>>>>"
+ps -a | head -5
+echo "<<<<< 2 pipes >>>>>"
+ps -a | awk '/pts\/[0-9]/{print $1}' | tail -5
+ps -a | awk '/pts\/[0-9]/{print $2}' | tail -2
+
+echo "<<<<< 3 pipes >>>>>"
+ls -l /proc/sys | awk '{print $9}' | sort -r | head -5
+ls -l /proc/sys | awk '{print $8}' | head -3 | sort -r
+ls -l /proc/sys | awk '{print $8$9}' | head -10 | sort
+
+echo "<<<<< 4 pipes with I/O redirection >>>>>"
+ls -l /proc/sys > test.txt
+awk '{print $8$9}'<test.txt | head -10 | head -8 | head -7 | sort > output.txt
+cat output.txt
+
+
+
+echo "<<<<< Background process (ps after some time to make sure the bg's are not defunct) >>>>>"
+dd if=/dev/zero of=/dev/null bs=1024 count=10485760 &
+sleep 10 &
+ps
+
+
+
+echo "<<<<< Directory Operations >>>>>"
+cd /home/ugrads/
+pwd
+cd -
+pwd
+
+echo "<<<<< Miscellenous >>>>>"
+rm newpwd.txt
+jobs
+sleep 10
